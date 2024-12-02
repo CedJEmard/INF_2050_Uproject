@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Declaration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Declaration.java</span></div><h1>Declaration.java</h1><pre class="source lang-java linenums">import org.json.simple.JSONObject;
+
+public class Declaration implements IErreurs{
+    protected static long heuresManquantesCycle;
+    protected static long heuresManquantesFormation;
+    protected static final String HEURE_FORMATION = &quot;Heures manquantes pour compléter le cycle : &quot;;
+    protected static final String HEURE_CUMUL = &quot; heures manquantes pour compléter la formation de 17h (cours,atelier,seminaire,colloque,conférence et lecture dirigée).&quot;;
+
+    protected static final String VERIF_HEURES_TRANSFEREE = &quot;Le nombre d'heures transférées est supérieur à 7 : 7h maximum pris en charge dans les calculs&quot;;
+    protected static final String VERIF_HEURES_TRANSFEREE_NEGATIVE = &quot;Le nombre d'heures transférées est inférieur à 0 : les heures doivent être des entiers positifs&quot;;
+
+    protected static final String VERIF_ORDRE = &quot;Ordre non reconnu: &quot;;
+
+    protected static final String VERIF_JSON = &quot;Il n'existe aucun transfert d'heures vers un autre cycle. Le champ heures_transferees_du_cycle_precedent ne devrait pas exister.&quot;;
+    protected static final String VERIF_JSON_ARCHI = &quot;Le champ heures_transferees_du_cycle_precedent est manquant.&quot;;
+    protected static final String VERIF_CHAMP_ORDRE = &quot;Le champ ordre est manquant.&quot;;
+
+    protected static final String VERIF_SEXE = &quot;Le fichier d'entrée est invalide : le sexe doit appartenir à {0, 1, 2}, le cycle est incomplet. La déclaration est invalide.&quot;;
+    protected static final String VERIF_IDENTITE = &quot;Le champ nom et/ou prenom doivent être mentionnés, ne pas le laisser vide, la déclaration est invalide&quot;;
+
+    protected String numeroDePermis;
+    protected long heuresTransfereesDuCyclePrecedent;
+    protected String cycle;
+    protected String ordre;
+    protected String prenom;
+    protected String nom;
+    protected long sexeIso;
+    protected String sexe;
+
+<span class="fc" id="L30">    protected static Resultats resultats = new Resultats();</span>
+    protected static Individu individu;
+
+<span class="fc" id="L33">    public Declaration(JSONObject declarationJSON){</span>
+<span class="fc" id="L34">        this.cycle = (String)declarationJSON.get(&quot;cycle&quot;);</span>
+        try{
+<span class="fc" id="L36">            this.ordre = (String)declarationJSON.get(&quot;ordre&quot;);</span>
+<span class="fc" id="L37">            discriminerIndividu(this.cycle);</span>
+<span class="fc" id="L38">            verifierChampJSONHeuresTransferees(declarationJSON);</span>
+<span class="pc" id="L39">        } catch(java.lang.NullPointerException e){System.out.println(VERIF_CHAMP_ORDRE);}</span>
+<span class="fc" id="L40">        this.numeroDePermis = (String)declarationJSON.get(&quot;numero_de_permis&quot;);</span>
+<span class="fc" id="L41">        this.prenom = (String)declarationJSON.get(&quot;prenom&quot;);</span>
+<span class="fc" id="L42">        this.nom = (String)declarationJSON.get(&quot;nom&quot;);</span>
+<span class="fc" id="L43">        this.sexeIso = (long)declarationJSON.get(&quot;sexe&quot;);</span>
+<span class="fc" id="L44">    }</span>
+
+<span class="fc" id="L46">    public Declaration(String numeroDePermis,long heuresTransfereesDuCyclePrecedent, String cycle, String ordre, String nom, String prenom, long sexeIso ) {</span>
+<span class="fc" id="L47">        this.numeroDePermis = numeroDePermis;</span>
+<span class="fc" id="L48">        this.heuresTransfereesDuCyclePrecedent = heuresTransfereesDuCyclePrecedent;</span>
+<span class="fc" id="L49">        this.cycle = cycle;</span>
+<span class="fc" id="L50">        this.ordre = ordre;</span>
+<span class="fc" id="L51">        this.prenom = prenom;</span>
+<span class="fc" id="L52">        this.nom = nom;</span>
+<span class="fc" id="L53">        this.sexeIso = sexeIso;</span>
+<span class="fc" id="L54">    }</span>
+
+    public boolean verifierChampNomOuPrenom(){
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if(this.nom.equals(&quot;&quot;)){return false;}</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if(this.prenom.equals(&quot;&quot;)){return false;}</span>
+<span class="fc" id="L59">        return true;</span>
+    }
+
+    @Override
+    public void envoyerErreur(String messageErreur) {
+<span class="fc" id="L64">        resultats.ajouterUneErreur(messageErreur);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        resultats.setComplet(resultats.getNombreErreurs() == 0);</span>
+<span class="fc" id="L66">    }</span>
+
+    protected int discriminerIndividu(String cycle){
+        // Discrimination d'individu
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if(this.ordre.equals(&quot;architectes&quot;)){this.individu = new Architecte(cycle); return 1;}</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if(this.ordre.equals(&quot;géologues&quot;)){this.individu  = new Geologue(cycle); return 2;}</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if(this.ordre.equals(&quot;psychologues&quot;)){this.individu = new Psychologue(cycle); return 3;}</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if(this.ordre.equals(&quot;podiatres&quot;)){this.individu = new Podiatre(cycle); return 4;}</span>
+<span class="fc" id="L74">        this.individu = new Individu(cycle); return 0;</span>
+    }
+
+    protected boolean verifierChampJSONHeuresTransferees(JSONObject declarationJSON){
+<span class="fc" id="L78">        try { this.heuresTransfereesDuCyclePrecedent = ((long) declarationJSON.get(&quot;heures_transferees_du_cycle_precedent&quot;));</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            if(discriminerIndividu(this.cycle) == 2){ Declaration.resultats.stopperExecution(VERIF_JSON); return false; }</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">            if(discriminerIndividu(this.cycle) == 3){ Declaration.resultats.stopperExecution(VERIF_JSON); return false; }</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">            if(discriminerIndividu(this.cycle) == 4){ Declaration.resultats.stopperExecution(VERIF_JSON); return false; }</span>
+<span class="fc" id="L82">            return true;</span>
+<span class="fc" id="L83">        } catch (java.lang.NullPointerException e) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if(discriminerIndividu(this.cycle) == 1){ Declaration.resultats.stopperExecution(VERIF_JSON_ARCHI); return false; }</span>
+<span class="fc" id="L85">            return true;</span>
+        }
+    }
+
+    public boolean getResultats(){
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if(Declaration.resultats.mettreFinALExecution()){return false;}</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if(!individu.verifierHeures()){</span>
+<span class="nc" id="L92">            Statistiques.incrementerNbDeclarationsValidesEtIncompletes(discriminerIndividu(this.cycle));</span>
+<span class="nc" id="L93">            return false;</span>
+        }
+<span class="nc" id="L95">        resultats.setComplet(true);</span>
+<span class="nc" id="L96">        Statistiques.incrementerNbDeclarationsCompletes(discriminerIndividu(this.cycle));</span>
+<span class="nc" id="L97">        return true;</span>
+    }
+
+    public static boolean verifierSiChaineSuivieDeQuatreChiffre(String chaine, int indice){
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if(chaine.length() != indice+5) {return false;}</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if(Character.isDigit(chaine.charAt(indice+1))</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                &amp;&amp; Character.isDigit(chaine.charAt(indice+2))</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                &amp;&amp; Character.isDigit(chaine.charAt(indice+3))</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                &amp;&amp; Character.isDigit(chaine.charAt(indice+4))</span>
+<span class="fc" id="L106">        ){return true;}</span>
+<span class="nc" id="L107">        return false;</span>
+    }
+
+    public static boolean verifierSiChaineCommenceParCinqChiffre(String chaineCinq){
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if(chaineCinq.length() &lt; 5) {return false;}</span>
+<span class="fc" id="L112">        return chaineCinq.matches(&quot;^[0-9]{5}&quot;);</span>
+    }
+
+
+    public boolean verifierDeclaration() {
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if(discriminerIndividu(this.cycle) == 0) {Statistiques.incrementerDeclarationIncompletesOuInvalides(); envoyerErreur(VERIF_ORDRE + ordre); return false; }</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if(!individu.verifierNumeroDePermis(this.numeroDePermis,this.nom,this.prenom)){Statistiques.incrementerDeclarationIncompletesOuInvalides();Statistiques.nbDeclarationNumPermisInvalide++;Declaration.resultats.stopperExecution(&quot;Numero permis invalide &quot; + numeroDePermis); return false; }</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if(!individu.verifierCycle(this.cycle)) {return false;}</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if(!verifierChampNomOuPrenom()){Statistiques.incrementerDeclarationIncompletesOuInvalides(); envoyerErreur(VERIF_IDENTITE); return false;}</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if(this.heuresTransfereesDuCyclePrecedent &gt; 7) {this.heuresTransfereesDuCyclePrecedent = 7;envoyerErreur(VERIF_HEURES_TRANSFEREE); }</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if(this.heuresTransfereesDuCyclePrecedent &lt; 0) {Statistiques.incrementerDeclarationIncompletesOuInvalides();this.heuresTransfereesDuCyclePrecedent = 0; envoyerErreur(VERIF_HEURES_TRANSFEREE_NEGATIVE); return false; }</span>
+<span class="fc" id="L123">        Activite.compteurHeuresRequisesArchitecteFormation += this.heuresTransfereesDuCyclePrecedent;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if(!this.verifierSexe()){Statistiques.incrementerDeclarationIncompletesOuInvalides();return false;}</span>
+<span class="fc" id="L125">        return true;</span>
+    }
+
+    protected boolean verifierSexe(){
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if(this.sexeIso==0){Statistiques.incrementerNbDeclarationParSexe(0); return true;}</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if(this.sexeIso==1){Statistiques.incrementerNbDeclarationParSexe(1); return true;}</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if(this.sexeIso==2){Statistiques.incrementerNbDeclarationParSexe(2); return true;}</span>
+<span class="fc" id="L132">        envoyerErreur(VERIF_SEXE);</span>
+<span class="fc" id="L133">        return false;</span>
+    }
+
+    protected String genrer(){
+<span class="fc" id="L137">        long isoEnString=sexeIso;</span>
+<span class="fc bfc" id="L138" title="All 4 branches covered.">        switch ((int) isoEnString) {</span>
+<span class="fc" id="L139">            case 0: sexe=&quot;inconnu&quot;; break;</span>
+<span class="fc" id="L140">            case 1: sexe=&quot;masculin&quot;; break;</span>
+<span class="fc" id="L141">            case 2: sexe=&quot;féminin&quot;; break;</span>
+<span class="fc" id="L142">            default: sexe=null; break;</span>
+<span class="fc" id="L143">        }return sexe;}</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L147">        return &quot;Déclaration{&quot; +</span>
+                &quot;Nom='&quot; + nom + '\'' +
+                &quot;Prénom='&quot; + prenom + '\'' +
+                &quot;Sexe='&quot; + sexe + '\'' +
+                &quot;numéro de permis='&quot; + numeroDePermis + '\'' +
+                &quot;, heures transferées du cycle précédent='&quot; + heuresTransfereesDuCyclePrecedent + '\'' +
+                &quot;, cycle='&quot; + cycle + '\'' ;
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

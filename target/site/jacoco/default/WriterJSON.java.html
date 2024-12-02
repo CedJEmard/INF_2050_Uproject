@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriterJSON.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">WriterJSON.java</span></div><h1>WriterJSON.java</h1><pre class="source lang-java linenums">import org.json.simple.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
+<span class="nc" id="L8">public class WriterJSON {</span>
+
+    public static void ecrireResultat(String fichierSortie) throws  IOException {
+<span class="nc" id="L11">        JSONObject resultat = new JSONObject();</span>
+<span class="nc" id="L12">        resultat.put(&quot;complet&quot;, Declaration.resultats.estComplet());</span>
+<span class="nc" id="L13">        resultat.put(&quot;erreurs&quot;, Declaration.resultats.getMesssagesErreurs());</span>
+<span class="nc bnc" id="L14" title="All 2 branches missed.">        if(Declaration.resultats.estComplet()){resultat.put(&quot;Statut&quot;, &quot;La déclaration à été complété avec succés.&quot;);}</span>
+<span class="nc" id="L15">        PrintWriter pw = new PrintWriter(fichierSortie,&quot;UTF-8&quot;);</span>
+<span class="nc" id="L16">        pw.write(resultat.toJSONString());</span>
+<span class="nc" id="L17">        pw.flush();pw.close();</span>
+<span class="nc" id="L18">    }</span>
+
+   public static void ecrireStatistiques(String fichierStatistiques) throws FileNotFoundException, UnsupportedEncodingException {
+<span class="nc" id="L21">        JSONObject statistiques = new JSONObject();</span>
+<span class="nc" id="L22">        PrintWriter pw = new PrintWriter(fichierStatistiques,&quot;UTF-8&quot;);</span>
+<span class="nc" id="L23">        ecrireStatistiquesDeclarations(statistiques);</span>
+<span class="nc" id="L24">        ecrireStatistiquesSexe(statistiques);</span>
+<span class="nc" id="L25">        ecrireStatistiquesActivites(statistiques);</span>
+<span class="nc" id="L26">        ecrireStatistiquesParOrdre(statistiques);</span>
+<span class="nc" id="L27">        pw.write(statistiques.toJSONString());</span>
+<span class="nc" id="L28">        pw.flush();pw.close();</span>
+<span class="nc" id="L29">    }</span>
+
+    public static void ecrireStatistiquesDeclarations(JSONObject statistiques){
+<span class="fc" id="L32">        statistiques.put(&quot;Nombre total de déclarations traitées&quot;,Statistiques.getNbDeclarationsTraitees());</span>
+<span class="fc" id="L33">        statistiques.put(&quot;Nombre total de déclarations complètes&quot;,Statistiques.getNbDeclarationsCompletes());</span>
+<span class="fc" id="L34">        statistiques.put(&quot;Nombre total de déclarations incomplètes ou invalides&quot;,Statistiques.getNbDeclarationsIncompletesOuInvalides());</span>
+<span class="fc" id="L35">        statistiques.put(&quot;Nombre total de déclarations soumises avec un numéro de permis invalide&quot;,Statistiques.getNbDeclarationNumPermisInvalide());</span>
+<span class="fc" id="L36">    }</span>
+    public static void ecrireStatistiquesSexe(JSONObject statistiques){
+<span class="fc" id="L38">        statistiques.put(&quot;Nombre total de déclarations faites par des hommes&quot;,Statistiques.getNbDeclarationParHomme());</span>
+<span class="fc" id="L39">        statistiques.put(&quot;Nombre total de déclarations faites par des femmes&quot;,Statistiques.getNbDeclarationParFemme());</span>
+<span class="fc" id="L40">        statistiques.put(&quot;Nombre total de déclarations faites par des gens de sexe inconnu&quot;,Statistiques.getNbDeclarationParSexeInconnu());</span>
+<span class="fc" id="L41">    }</span>
+    public static void ecrireStatistiquesActivites(JSONObject statistiques){
+<span class="fc" id="L43">        statistiques.put(&quot;Nombre total d'activités dans les déclarations&quot;,Statistiques.getNbActivitesDansDeclaration());</span>
+<span class="fc" id="L44">        statistiques.put(&quot;Nombre de Cours&quot;,Statistiques.getNbCours());</span>
+<span class="fc" id="L45">        statistiques.put(&quot;Nombre de Séminaires&quot;,Statistiques.getNbSeminaire());</span>
+<span class="fc" id="L46">        statistiques.put(&quot;Nombre de Groupes de discussion&quot;,Statistiques.getNbGroupeDeDiscussion());</span>
+<span class="fc" id="L47">        statistiques.put(&quot;Nombre de Projets de recherche&quot;,Statistiques.getNbProjetDeRecherche());</span>
+<span class="fc" id="L48">        statistiques.put(&quot;Nombre de Conférences&quot;, Statistiques.getNbConference());</span>
+<span class="fc" id="L49">        statistiques.put(&quot;Nombre de Colloques&quot;,Statistiques.getNbColloque());</span>
+<span class="fc" id="L50">        statistiques.put(&quot;Nombre de Lectures dirigées&quot;,Statistiques.getNbLectureDirigee());</span>
+<span class="fc" id="L51">        statistiques.put(&quot;Nombre d' Ateliers&quot;,Statistiques.getNbAtelier());</span>
+<span class="fc" id="L52">        statistiques.put(&quot;Nombre de Redactions professionnelle&quot;,Statistiques.getNbRedactionProfessionnelle());</span>
+<span class="fc" id="L53">        statistiques.put(&quot;Nombre de Présentations&quot;,Statistiques.getNbPrésentation());</span>
+<span class="fc" id="L54">    }</span>
+    public static void ecrireStatistiquesParOrdre(JSONObject statistiques){
+<span class="fc" id="L56">        statistiques.put(&quot;Nombre total de déclarations valides et complètes par architectes&quot;,Statistiques.getNbDeclarationsCompletesArchitectes());</span>
+<span class="fc" id="L57">        statistiques.put(&quot;Nombre total de déclarations valides et complètes par géologues&quot;,Statistiques.getNbDeclarationsCompletesGeologues());</span>
+<span class="fc" id="L58">        statistiques.put(&quot;Nombre total de déclarations valides et complètes par psychologues&quot;,Statistiques.getNbDeclarationsCompletesPsycologues());</span>
+<span class="fc" id="L59">        statistiques.put(&quot;Nombre total de déclarations valides et complètes par podiatres&quot;,Statistiques.getNbDeclarationsCompletesPodiatres());</span>
+<span class="fc" id="L60">        statistiques.put(&quot;Nombre total de déclarations valides et incomplètes par architectes&quot;, Statistiques.getNbDeclarationsValidesEtIncompletesArchitectes());</span>
+<span class="fc" id="L61">        statistiques.put(&quot;Nombre total de déclarations valides et incomplètes par géologues&quot;,   Statistiques.getNbDeclarationsValidesEtIncompletesGeologues());</span>
+<span class="fc" id="L62">        statistiques.put(&quot;Nombre total de déclarations valides et incomplètes par psychologues&quot;,Statistiques.getNbDeclarationsValidesEtIncompletesPsycologues());</span>
+<span class="fc" id="L63">        statistiques.put(&quot;Nombre total de déclarations valides et incomplètes par podiatres&quot;,   Statistiques.getNbDeclarationsValidesEtIncompletesPodiatres());</span>
+<span class="fc" id="L64">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

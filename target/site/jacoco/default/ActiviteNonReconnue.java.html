@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ActiviteNonReconnue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ActiviteNonReconnue.java</span></div><h1>ActiviteNonReconnue.java</h1><pre class="source lang-java linenums">public class ActiviteNonReconnue extends Activite implements IErreurs{
+<span class="fc" id="L2">    protected final String NON_PRIS_EN_CHARGE = &quot;Activite non prise en charge : &quot; + this.description ;</span>
+<span class="fc" id="L3">    protected int index = 10;</span>
+    public ActiviteNonReconnue(String description, String categorie, long heures, String date){
+<span class="fc" id="L5">        super(description, categorie, heures, date);</span>
+<span class="fc" id="L6">        Statistiques.incrementerDeclarationIncompletesOuInvalides();</span>
+<span class="fc" id="L7">        super.validerActivite(index);</span>
+<span class="fc" id="L8">    }</span>
+
+    public ActiviteNonReconnue(long heures){
+<span class="fc" id="L11">        super(heures);</span>
+<span class="fc" id="L12">    }</span>
+
+    @Override
+    protected boolean validerFormatHeure() {
+<span class="fc" id="L16">        this.heures = 0;</span>
+<span class="fc" id="L17">        envoyerErreur(NON_PRIS_EN_CHARGE);</span>
+<span class="fc" id="L18">        return false;</span>
+    }
+
+    @Override
+    public void envoyerErreur(String messageErreur) {
+<span class="fc" id="L23">        Declaration.resultats.ajouterUneErreur(messageErreur);</span>
+<span class="fc" id="L24">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LectureDirigee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">LectureDirigee.java</span></div><h1>LectureDirigee.java</h1><pre class="source lang-java linenums">public class LectureDirigee extends Activite implements IErreurs{
+<span class="fc" id="L2">    protected int index = 8;</span>
+
+    public LectureDirigee(String description, String categorie, long heures, String date){
+<span class="fc" id="L5">        super(description, categorie, heures, date);</span>
+<span class="fc" id="L6">        Statistiques.incrementerNbActiviteParCategorie(index);</span>
+<span class="fc" id="L7">        DATE_INVALIDE = &quot;Date hors de l'intervalle pour &quot;+ this.description + &quot; - Activité ignorée&quot;;</span>
+<span class="fc" id="L8">        FORMAT_DATE = &quot;La date de &quot;+ this.description +&quot; doit être au format YYYY-mm-dd - Activité ignorée&quot;;</span>
+<span class="fc" id="L9">        EXISTANCE_DATE = &quot;La date de &quot;+ this.description +&quot; est n'existe pas &quot;;</span>
+<span class="fc" id="L10">        DESCRIPTION_INVALIDE = &quot;Fichier invalide, cycle incomplet : la description de &quot; + this.description + &quot; doit avoir un minimum de 21 caractères&quot;;</span>
+<span class="fc" id="L11">        HEURE_INVALIDE = &quot;Fichier invalide, heures pour l'Activité: &quot;+ this.description +&quot; doivent être des entiers positif&quot;;</span>
+<span class="fc" id="L12">        HEURES_EN_TROP = 10 + &quot; heures prises en compte pour l'Activité: &quot;+ this.description + &quot; (10 heures max sur une journée)&quot;;</span>
+<span class="fc" id="L13">        verifierLesHeuresDeclarees(heures);</span>
+<span class="fc" id="L14">        super.validerActivite(index);</span>
+<span class="fc" id="L15">    }</span>
+
+    public LectureDirigee(long heures){
+<span class="fc" id="L18">        super(heures);</span>
+<span class="fc" id="L19">    }</span>
+
+    @Override
+    protected boolean validerFormatHeure() {
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (this.heures &lt; 1) {</span>
+<span class="fc" id="L24">            Statistiques.incrementerDeclarationIncompletesOuInvalides();</span>
+<span class="fc" id="L25">            Declaration.resultats.stopperExecution(HEURE_INVALIDE);</span>
+<span class="fc" id="L26">            return false;</span>
+        }
+<span class="fc" id="L28">        compteurHeuresRequisesArchitecteFormation += this.heures;</span>
+<span class="fc" id="L29">        return true;</span>
+    }
+    @Override
+    public void envoyerErreur(String messageErreur) {
+<span class="nc" id="L33">        Declaration.resultats.ajouterUneErreur(messageErreur);</span>
+<span class="nc" id="L34">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

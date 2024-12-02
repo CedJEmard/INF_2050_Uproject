@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Geologue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Geologue.java</span></div><h1>Geologue.java</h1><pre class="source lang-java linenums">public class Geologue extends Individu{
+    protected static final String HEURES_COURS_GEO = &quot;25 heures de cours minimum requises pour Geologue&quot;;
+    protected static final String HEURES_GDD_GEO = &quot;1 heures de groupe de discussion minimum requises pour Geologue&quot;;
+    protected static final String HEURES_PDR_GEO = &quot;3 heures de projet de recherche minimum requises pour Geologue&quot;;
+
+    protected static final String VERIF_CYCLE =&quot;Cycle invalide. Le cycle supporté pour les géologues est \&quot;2018-2021\&quot;. Le cycle est incomplet&quot;;
+    protected static final String VERIF_NUMERO_PERMIS=&quot;Le fichier d'entrée est invalide : le numéro de permis des géologues doit être composé de 2 lettres suivies de 4 chiffres. La première lettre du numéro de permis correspond à la première lettre du nom du membre en majuscule. La deuxième lettre du numéro de permis correspond à la première lettre du prénom du membre en majuscule. Exemple : \&quot;BJ3822\&quot;, le cycle est incomplet&quot;;
+
+    public Geologue(String cycle) {
+<span class="fc" id="L10">        super(cycle);</span>
+<span class="fc" id="L11">        this.totalHeureRequiseCycle = 55;</span>
+<span class="fc" id="L12">        this.dateMinCycle = &quot;2018-06-01&quot;; this.dateMaxCycle = &quot;2021-06-01&quot;;</span>
+
+<span class="fc" id="L14">        this.minimumHeureCours = 22;</span>
+<span class="fc" id="L15">        this.minimumHeureProjetDeRecherche = 3;</span>
+<span class="fc" id="L16">        this.minimumHeureGroupeDeDiscussion = 1;</span>
+<span class="fc" id="L17">    }</span>
+
+    public Geologue(){
+<span class="nc" id="L20">        super();</span>
+<span class="nc" id="L21">    }</span>
+
+    @Override
+    protected boolean verifierCycle(String cycle) {
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if(!cycle.equals(&quot;2018-2021&quot;)){Declaration.resultats.stopperExecution(VERIF_CYCLE);return false;}</span>
+<span class="fc" id="L26">        return true;</span>
+    }
+
+    protected static boolean verifierDeuxLettresGeologue(String chaine, String nom, String prenom){
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if(chaine.length()&lt;2){return false;}</span>
+<span class="fc bfc" id="L31" title="All 4 branches covered.">        if(nom.charAt(0) == chaine.charAt(0) &amp;&amp; prenom.charAt(0)==chaine.charAt(1)){return true;}</span>
+<span class="fc" id="L32">        return false;</span>
+    }
+
+    protected boolean verifierNumeroDePermis(String numeroDePermis, String nom, String prenom){
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(verifierDeuxLettresGeologue(numeroDePermis, nom, prenom)</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">                &amp;&amp; Declaration.verifierSiChaineSuivieDeQuatreChiffre(numeroDePermis,1)){return true;}</span>
+<span class="fc" id="L38">        Declaration.resultats.stopperExecution(VERIF_NUMERO_PERMIS);return false;</span>
+    }
+
+    protected boolean verifierHeures(){
+<span class="fc" id="L42">        int compteur = 0;</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(0) &lt; 22){envoyerErreur(HEURES_COURS_GEO); compteur++;}</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(1) &lt; 1){envoyerErreur(HEURES_GDD_GEO); compteur++;}</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(2) &lt; 2){envoyerErreur(HEURES_PDR_GEO); compteur++;}</span>
+<span class="pc bpc" id="L46" title="3 of 6 branches missed.">        if(!verifierTotalHeuresCycle() | compteur &gt; 0){return false;}</span>
+<span class="nc" id="L47">        return true;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resultats.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Resultats.java</span></div><h1>Resultats.java</h1><pre class="source lang-java linenums">import java.util.ArrayList;
+
+<span class="fc" id="L3">public class Resultats {</span>
+    protected boolean complet;
+    protected int nombreErreurs;
+<span class="fc" id="L6">    protected ArrayList&lt;String&gt; messagesErreurs = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L7">    protected ArrayList&lt;String&gt; messageFinExecution = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L8">    protected boolean executionFinie = false;</span>
+
+<span class="nc" id="L10">    public boolean estComplet() {return complet;}</span>
+
+    public void setComplet(boolean complet) {
+<span class="fc" id="L13">        this.complet = complet;</span>
+<span class="fc" id="L14">    }</span>
+
+    public int getNombreErreurs() {
+<span class="fc" id="L17">        return nombreErreurs;</span>
+    }
+
+    public void setNombreErreurs(int nombreErreurs) {
+<span class="fc" id="L21">        this.nombreErreurs = nombreErreurs;</span>
+<span class="fc" id="L22">    }</span>
+
+    public ArrayList&lt;String&gt; getMesssagesErreurs() {
+<span class="fc" id="L25">        return messagesErreurs;</span>
+    }
+
+    public void setMessage(String message) {
+<span class="fc" id="L29">        this.messagesErreurs.add(message);</span>
+<span class="fc" id="L30">    }</span>
+    public void setMessageFinExecution(String message) {
+<span class="fc" id="L32">        this.messageFinExecution.add(message);</span>
+<span class="fc" id="L33">    }</span>
+
+<span class="fc" id="L35">    public void supprimerMessages() {this.messagesErreurs.clear();}</span>
+
+    public void ajouterUneErreur(String message){
+<span class="fc" id="L38">        setMessage(message);</span>
+<span class="fc" id="L39">        setNombreErreurs(this.nombreErreurs + 1);</span>
+<span class="fc" id="L40">    }</span>
+
+    public void stopperExecution(String message){
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if(!executionFinie){</span>
+<span class="fc" id="L44">            executionFinie = true;</span>
+<span class="fc" id="L45">            setMessageFinExecution(message);</span>
+        }
+<span class="fc" id="L47">    }</span>
+
+    public boolean mettreFinALExecution(){
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if(executionFinie) {</span>
+<span class="fc" id="L51">            supprimerMessages();</span>
+<span class="fc" id="L52">            ajouterUneErreur(messageFinExecution.get(0));</span>
+<span class="fc" id="L53">            System.out.println(messageFinExecution.get(0));</span>
+<span class="fc" id="L54">            return true;</span>
+        }
+<span class="nc" id="L56">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L61">        return &quot;Resultats{&quot; +</span>
+                &quot;complet=&quot; + complet +
+                &quot;, nombreErreurs=&quot; + nombreErreurs +
+                &quot;, erreurs=&quot; + messagesErreurs +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

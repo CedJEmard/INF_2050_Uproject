@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Statistiques.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Statistiques.java</span></div><h1>Statistiques.java</h1><pre class="source lang-java linenums">import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.*;
+import java.util.Iterator;
+import java.util.Map;
+
+<span class="nc" id="L9">public class Statistiques {</span>
+
+    protected static long nbDeclarationsTraitees;
+<span class="fc" id="L12">    protected static long[] nbDeclarationsCompletes = {0, 0, 0, 0, 0};</span>
+    protected static long nbDeclarationsIncompletesOuInvalides;
+<span class="fc" id="L14">    protected static long[] nbDeclarationsValidesEtIncompletes = {0, 0, 0, 0, 0};</span>
+<span class="fc" id="L15">    protected static long[] nbDeclarationParSexe = {0, 0, 0};</span>
+    protected static long nbActivitesDansDeclaration;
+<span class="fc" id="L17">    protected static long[] nbActiviteParCategorie = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};</span>
+    protected static long nbDeclarationNumPermisInvalide;
+<span class="fc" id="L19">    protected static boolean dejaComptee = false;</span>
+
+<span class="fc" id="L21">    public static long getNbDeclarationsTraitees() {return nbDeclarationsTraitees;}</span>
+
+    public static long getNbDeclarationsCompletes() {
+<span class="fc" id="L24">        int somme = 0;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        for(int i=0;i&lt;nbDeclarationsCompletes.length;i++){somme += nbDeclarationsCompletes[i];}</span>
+<span class="fc" id="L26">        return somme;</span>
+    }
+
+<span class="fc" id="L29">    public static long getNbDeclarationsCompletesArchitectes(){return nbDeclarationsCompletes[1];}</span>
+<span class="fc" id="L30">    public static long getNbDeclarationsCompletesGeologues(){return nbDeclarationsCompletes[2];}</span>
+<span class="fc" id="L31">    public static long getNbDeclarationsCompletesPsycologues(){return nbDeclarationsCompletes[3];}</span>
+<span class="fc" id="L32">    public static long getNbDeclarationsCompletesPodiatres(){return nbDeclarationsCompletes[4];}</span>
+
+<span class="fc" id="L34">    public static long getNbDeclarationsIncompletesOuInvalides(){return nbDeclarationsIncompletesOuInvalides;}</span>
+
+<span class="fc" id="L36">    public static long getNbDeclarationsValidesEtIncompletesArchitectes(){return nbDeclarationsValidesEtIncompletes[1];}</span>
+<span class="fc" id="L37">    public static long getNbDeclarationsValidesEtIncompletesGeologues(){return   nbDeclarationsValidesEtIncompletes[2];}</span>
+<span class="fc" id="L38">    public static long getNbDeclarationsValidesEtIncompletesPsycologues(){return nbDeclarationsValidesEtIncompletes[3];}</span>
+<span class="fc" id="L39">    public static long getNbDeclarationsValidesEtIncompletesPodiatres(){return   nbDeclarationsValidesEtIncompletes[4];}</span>
+
+<span class="fc" id="L41">    public static long getNbDeclarationParHomme(){return nbDeclarationParSexe[1];}</span>
+<span class="fc" id="L42">    public static long getNbDeclarationParFemme(){return nbDeclarationParSexe[2];}</span>
+<span class="fc" id="L43">    public static long getNbDeclarationParSexeInconnu(){return nbDeclarationParSexe[0];}</span>
+
+    public static long getNbActivitesDansDeclaration() {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(int i=0;i&lt;nbActiviteParCategorie.length;i++){nbActivitesDansDeclaration += nbActiviteParCategorie[i];}</span>
+<span class="fc" id="L47">        return nbActivitesDansDeclaration;</span>
+    }
+
+<span class="fc" id="L50">    public static long getNbCours(){return nbActiviteParCategorie[0];}</span>
+<span class="fc" id="L51">    public static long getNbSeminaire(){return nbActiviteParCategorie[9];}</span>
+<span class="fc" id="L52">    public static long getNbGroupeDeDiscussion(){return nbActiviteParCategorie[1];}</span>
+<span class="fc" id="L53">    public static long getNbProjetDeRecherche(){return nbActiviteParCategorie[2];}</span>
+<span class="fc" id="L54">    public static long getNbConference(){return nbActiviteParCategorie[3];}</span>
+<span class="fc" id="L55">    public static long getNbPrésentation(){return nbActiviteParCategorie[4];}</span>
+<span class="fc" id="L56">    public static long getNbRedactionProfessionnelle(){return nbActiviteParCategorie[5];}</span>
+<span class="fc" id="L57">    public static long getNbAtelier(){return nbActiviteParCategorie[6];}</span>
+<span class="fc" id="L58">    public static long getNbColloque(){return nbActiviteParCategorie[7];}</span>
+<span class="fc" id="L59">    public static long getNbLectureDirigee(){return nbActiviteParCategorie[8];}</span>
+
+<span class="fc" id="L61">    public static long getNbDeclarationNumPermisInvalide() {return nbDeclarationNumPermisInvalide;}</span>
+
+<span class="fc" id="L63">    public static void setNbDeclarationsCompletes(int i, long valeur) {Statistiques.nbDeclarationsCompletes[i] = valeur;}</span>
+<span class="fc" id="L64">    public static void setNbDeclarationsValidesEtIncompletes(int i, long valeur) {Statistiques.nbDeclarationsValidesEtIncompletes[i] = valeur;}</span>
+<span class="fc" id="L65">    public static void setNbDeclarationParSexe(int i, long valeur) {Statistiques.nbDeclarationParSexe[i] = valeur;}</span>
+<span class="fc" id="L66">    public static void setNbActiviteParCategorie(int i, long valeur) {Statistiques.nbActiviteParCategorie[i] = valeur;}</span>
+
+<span class="nc" id="L68">    public static void incrementerNbDeclarationsCompletes(int i) {Statistiques.nbDeclarationsCompletes[i] ++;}</span>
+<span class="nc" id="L69">    public static void incrementerNbDeclarationsValidesEtIncompletes(int i) {Statistiques.nbDeclarationsValidesEtIncompletes[i] ++;}</span>
+<span class="fc" id="L70">    public static void incrementerNbDeclarationParSexe(int i) {Statistiques.nbDeclarationParSexe[i] ++;}</span>
+<span class="fc" id="L71">    public static void incrementerNbActiviteParCategorie(int i) {Statistiques.nbActiviteParCategorie[i] ++;}</span>
+
+
+
+    public static void reinitialiserStatistiques(){
+<span class="fc" id="L76">        nbDeclarationsTraitees = 0;</span>
+<span class="fc" id="L77">        nbDeclarationsIncompletesOuInvalides = 0;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        for(int i=0; i&lt;nbDeclarationsCompletes.length; i++){setNbDeclarationsCompletes(i,0);;}</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        for(int i=0; i&lt;nbDeclarationsValidesEtIncompletes.length; i++){setNbDeclarationsValidesEtIncompletes(i,0);}</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for(int i=0; i&lt;nbDeclarationParSexe.length; i++){setNbDeclarationParSexe(i,0);}</span>
+<span class="fc" id="L81">        nbActivitesDansDeclaration = 0;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for(int i=0; i&lt;nbActiviteParCategorie.length; i++){setNbActiviteParCategorie(i,0);}</span>
+<span class="fc" id="L83">        nbDeclarationNumPermisInvalide = 0;</span>
+<span class="fc" id="L84">    }</span>
+
+    public static void afficherStatistiques(String fichierStatistique){
+        try{
+<span class="nc" id="L88">        Object parser = new JSONParser().parse(new BufferedReader(new InputStreamReader(new FileInputStream(fichierStatistique), &quot;UTF-8&quot;)));</span>
+<span class="nc" id="L89">        JSONObject statistiquesJSON = (JSONObject) parser;</span>
+<span class="nc" id="L90">            String statistiquesConsole = &quot;Voici les statistiques à date :\n&quot;</span>
+<span class="nc" id="L91">            +  afficherStatistiquesDeclaration(statistiquesJSON)</span>
+<span class="nc" id="L92">            +  afficherStatistiquesSexe(statistiquesJSON)</span>
+<span class="nc" id="L93">            +  afficherStatistiquesActivites(statistiquesJSON)</span>
+<span class="nc" id="L94">            +  afficherStatistiquesOrdre(statistiquesJSON);</span>
+<span class="nc" id="L95">            System.out.println(statistiquesConsole);</span>
+<span class="nc" id="L96">        } catch (IOException e){}catch (ParseException e){}</span>
+<span class="nc" id="L97">    }</span>
+
+    public static String afficherStatistiquesDeclaration(JSONObject statistiques){
+<span class="nc" id="L100">        return    &quot;Nombre total de déclarations traitées: &quot; + statistiques.get(&quot;Nombre total de déclarations traitées&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L101">                + &quot;Nombre total de déclarations complètes: &quot; + statistiques.get(&quot;Nombre total de déclarations complètes&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L102">                + &quot;Nombre total de déclarations incomplètes ou invalides: &quot; + statistiques.get(&quot;Nombre total de déclarations incomplètes ou invalides&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L103">                + &quot;Nombre total de déclarations soumises avec un numéro de permis invalide: &quot; + statistiques.get(&quot;Nombre total de déclarations soumises avec un numéro de permis invalide&quot;) + &quot;\n&quot;;</span>
+    }
+    public static String afficherStatistiquesSexe(JSONObject statistiques){
+<span class="nc" id="L106">        return    &quot;Nombre total de déclarations faites par des hommes: &quot; + statistiques.get(&quot;Nombre total de déclarations faites par des hommes&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L107">                + &quot;Nombre total de déclarations faites par des femmes: &quot; + statistiques.get(&quot;Nombre total de déclarations faites par des femmes&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L108">                + &quot;Nombre total de déclarations faites par des gens de sexe inconnu: &quot; + statistiques.get(&quot;Nombre total de déclarations faites par des gens de sexe inconnu&quot;) + &quot;\n&quot;;</span>
+    }
+    public static String afficherStatistiquesOrdre(JSONObject statistiques){
+<span class="nc" id="L111">        return    &quot;Nombre total de déclarations valides et complètes par architectes: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et complètes par architectes&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L112">                + &quot;Nombre total de déclarations valides et complètes par géologues: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et complètes par géologues&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L113">                + &quot;Nombre total de déclarations valides et complètes par psychologues: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et complètes par psychologues&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L114">                + &quot;Nombre total de déclarations valides et complètes par podiatres: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et complètes par podiatres&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L115">                + &quot;Nombre total de déclarations valides et incomplètes par architectes: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par architectes&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L116">                + &quot;Nombre total de déclarations valides et incomplètes par géologue: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par géologues&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L117">                + &quot;Nombre total de déclarations valides et incomplètes par psychologues: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par psychologues&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L118">                + &quot;Nombre total de déclarations valides et incomplètes par podiatres: &quot; + statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par podiatres&quot;) + &quot;\n&quot;;</span>
+    }
+    public static String afficherStatistiquesActivites(JSONObject statistiques){
+<span class="nc" id="L121">        return    &quot;Nombre total d'activités dans les déclarations: &quot; + statistiques.get(&quot;Nombre total d'activités dans les déclarations&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L122">                + &quot;Nombre de Cours: &quot; + statistiques.get(&quot;Nombre de Cours&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L123">                + &quot;Nombre de Séminaires: &quot; + statistiques.get(&quot;Nombre de Séminaires&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L124">                + &quot;Nombre de Groupes de discussion: &quot; + statistiques.get(&quot;Nombre de Groupes de discussion&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L125">                + &quot;Nombre de Projets de recherche: &quot; + statistiques.get(&quot;Nombre de Projets de recherche&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L126">                + &quot;Nombre de Colloques: &quot; + statistiques.get(&quot;Nombre de Colloques&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L127">                + &quot;Nombre de Lectures dirigées: &quot; + statistiques.get(&quot;Nombre de Lectures dirigées&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L128">                + &quot;Nombre de Conférences: &quot; + statistiques.get(&quot;Nombre de Conférences&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L129">                + &quot;Nombre d' Ateliers: &quot; + statistiques.get(&quot;Nombre d' Ateliers&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L130">                + &quot;Nombre de Redactions professionnelle: &quot; + statistiques.get(&quot;Nombre de Redactions professionnelle&quot;) + &quot;\n&quot;</span>
+<span class="nc" id="L131">                + &quot;Nombre de Présentations: &quot; + statistiques.get(&quot;Nombre de Présentations&quot;) + &quot;\n&quot;;</span>
+    }
+
+    public static void lireStatistiquesDeclaration(JSONObject statistiques){
+<span class="fc" id="L135">        nbDeclarationNumPermisInvalide = (long) statistiques.get(&quot;Nombre total de déclarations soumises avec un numéro de permis invalide&quot;);</span>
+<span class="fc" id="L136">        nbDeclarationsTraitees = (long) statistiques.get(&quot;Nombre total de déclarations traitées&quot;);</span>
+<span class="fc" id="L137">    }</span>
+    public static void lireStatistiquesSexe(JSONObject statistiques){
+<span class="fc" id="L139">        setNbDeclarationParSexe(0, (Long) statistiques.get(&quot;Nombre total de déclarations faites par des hommes&quot;));</span>
+<span class="fc" id="L140">        setNbDeclarationParSexe(1, (Long) statistiques.get(&quot;Nombre total de déclarations faites par des femmes&quot;));</span>
+<span class="fc" id="L141">        setNbDeclarationParSexe(2, (Long) statistiques.get(&quot;Nombre total de déclarations faites par des gens de sexe inconnu&quot;));</span>
+<span class="fc" id="L142">    }</span>
+    public static void lireStatistiquesOrdre(JSONObject statistiques){
+<span class="fc" id="L144">        setNbDeclarationsCompletes(1,(Long)statistiques.get(&quot;Nombre total de déclarations valides et complètes par architectes&quot;));</span>
+<span class="fc" id="L145">        setNbDeclarationsCompletes(2,(Long)statistiques.get(&quot;Nombre total de déclarations valides et complètes par géologues&quot;));</span>
+<span class="fc" id="L146">        setNbDeclarationsCompletes(3,(Long)statistiques.get(&quot;Nombre total de déclarations valides et complètes par psychologues&quot;));</span>
+<span class="fc" id="L147">        setNbDeclarationsCompletes(4,(Long)statistiques.get(&quot;Nombre total de déclarations valides et complètes par podiatres&quot;));</span>
+<span class="fc" id="L148">        setNbDeclarationsValidesEtIncompletes(1,(Long) statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par architectes&quot;));</span>
+<span class="fc" id="L149">        setNbDeclarationsValidesEtIncompletes(2,(Long) statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par géologues&quot;));</span>
+<span class="fc" id="L150">        setNbDeclarationsValidesEtIncompletes(3,(Long) statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par psychologues&quot;));</span>
+<span class="fc" id="L151">        setNbDeclarationsValidesEtIncompletes(4,(Long) statistiques.get(&quot;Nombre total de déclarations valides et incomplètes par podiatres&quot;));</span>
+<span class="fc" id="L152">    }</span>
+    public static void lireStatistiquesActivites(JSONObject statistiques) {
+<span class="fc" id="L154">        setNbActiviteParCategorie(0,(Long)  statistiques.get(&quot;Nombre de Cours&quot;));</span>
+<span class="fc" id="L155">        setNbActiviteParCategorie(9,(Long)  statistiques.get(&quot;Nombre de Séminaires&quot;));</span>
+<span class="fc" id="L156">        setNbActiviteParCategorie(1,(Long)  statistiques.get(&quot;Nombre de Groupes de discussion&quot;));</span>
+<span class="fc" id="L157">        setNbActiviteParCategorie(2,(Long)  statistiques.get(&quot;Nombre de Projets de recherche&quot;));</span>
+<span class="fc" id="L158">        setNbActiviteParCategorie(3,(Long)  statistiques.get(&quot;Nombre de Colloques&quot;));</span>
+<span class="fc" id="L159">        setNbActiviteParCategorie(4,(Long)  statistiques.get(&quot;Nombre de Lectures dirigées&quot;));</span>
+<span class="fc" id="L160">        setNbActiviteParCategorie(5,(Long)  statistiques.get(&quot;Nombre de Conférences&quot;));</span>
+<span class="fc" id="L161">        setNbActiviteParCategorie(6,(Long)  statistiques.get(&quot;Nombre d' Ateliers&quot;));</span>
+<span class="fc" id="L162">        setNbActiviteParCategorie(7,(Long)  statistiques.get(&quot;Nombre de Redactions professionnelle&quot;));</span>
+<span class="fc" id="L163">        setNbActiviteParCategorie(8,(Long)  statistiques.get(&quot;Nombre de Présentations&quot;));</span>
+<span class="fc" id="L164">    }</span>
+
+    public static void lireStatistiques(String fichierStatistique){
+        try{
+<span class="fc" id="L168">            Object parser = new JSONParser().parse(new BufferedReader(new InputStreamReader(new FileInputStream(fichierStatistique), &quot;UTF-8&quot;)));</span>
+<span class="fc" id="L169">            JSONObject statistiquesJSON = (JSONObject) parser;</span>
+<span class="fc" id="L170">            lireStatistiquesDeclaration(statistiquesJSON);</span>
+<span class="fc" id="L171">            lireStatistiquesSexe(statistiquesJSON);</span>
+<span class="fc" id="L172">            lireStatistiquesOrdre(statistiquesJSON);</span>
+<span class="fc" id="L173">            lireStatistiquesActivites(statistiquesJSON);</span>
+<span class="pc" id="L174">        } catch (IOException e){}catch (ParseException e){}</span>
+
+<span class="fc" id="L176">    }</span>
+
+    public static void incrementerDeclarationIncompletesOuInvalides(){
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if(!dejaComptee){</span>
+<span class="fc" id="L180">            reinitialiserStatistiques();</span>
+<span class="fc" id="L181">            lireStatistiques(&quot;statistiques.json&quot;);</span>
+<span class="fc" id="L182">            nbDeclarationsTraitees++;</span>
+<span class="fc" id="L183">            nbDeclarationsIncompletesOuInvalides++;</span>
+<span class="fc" id="L184">            dejaComptee=true;</span>
+        }
+<span class="fc" id="L186">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

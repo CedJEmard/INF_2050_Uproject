@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Individu.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Individu.java</span></div><h1>Individu.java</h1><pre class="source lang-java linenums">public class Individu implements IErreurs {
+    protected String cycle;
+    protected String dateMinCycle;
+    protected String dateMaxCycle;
+    protected long totalHeureRequiseCycle;
+
+    protected long minimumHeureCours; //0
+    protected long minimumHeureGroupeDeDiscussion; //1
+    protected long minimumHeureProjetDeRecherche; //2
+    protected long minimumHeureFormationContinue; //60
+    
+    protected long maximumHeureConference; //3
+    protected long maximumHeureGroupeDeDiscussion;
+    protected long maximumHeurePresentation; //4
+    protected long maximumHeureProjetDeRecherche;
+    protected long maximumHeureRedactionProfessionnelle; //5
+
+<span class="fc" id="L18">    public Individu(String cycle) {this.cycle = cycle;}</span>
+
+<span class="nc" id="L20">    public Individu() {</span>
+
+<span class="nc" id="L22">    }</span>
+
+    protected boolean verifierCycle(String cycle){
+<span class="nc" id="L25">        return false;</span>
+    }
+
+    protected boolean verifierNumeroDePermis(String numeroDePermis, String nom, String prenom){
+<span class="nc" id="L29">        return false;</span>
+    }
+
+    protected boolean verifierHeures(){
+<span class="nc" id="L33">        return false;</span>
+    };
+
+    protected boolean verifierTotalHeuresCycle() {
+<span class="fc" id="L37">        Activite.sommerTotalHeuresCycle();</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if(Activite.compteurTotalHeuresCycle &lt; this.totalHeureRequiseCycle){</span>
+<span class="fc" id="L39">            Declaration.heuresManquantesCycle = this.totalHeureRequiseCycle - Activite.compteurTotalHeuresCycle;</span>
+<span class="fc" id="L40">            envoyerErreur(Declaration.HEURE_FORMATION + Declaration.heuresManquantesCycle);</span>
+<span class="fc" id="L41">            return false;</span>
+        }
+<span class="fc" id="L43">        return true;</span>
+    }
+
+    @Override
+<span class="fc" id="L47">    public void envoyerErreur(String messageErreur) {Declaration.resultats.ajouterUneErreur(messageErreur);}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

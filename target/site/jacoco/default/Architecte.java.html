@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Architecte.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Architecte.java</span></div><h1>Architecte.java</h1><pre class="source lang-java linenums">public class Architecte extends Individu{
+    protected static final String VERIF_CYCLE = &quot;Cycle invalide. Les cycles supportés pour les architectes sont \&quot;2020-2022\&quot;, \&quot;2018-2020\&quot; ou \&quot;2016-2018\&quot;. Le cycle est incomplet&quot;;
+    protected static final String VERIF_NUMERO_PERMIS= &quot;Le fichier d'entrée est invalide : le numéro de permis des architectes doit être composé d'une lettre suivie de 4 chiffres. La lettre peut être un A ou un T en majuscule. Exemple : T3443, le cycle est incomplet&quot;;
+
+    public Architecte(String cycle) {
+<span class="fc" id="L6">        super(cycle);</span>
+<span class="fc bfc" id="L7" title="All 2 branches covered.">        if(cycle.equals(&quot;2018-2020&quot;)){</span>
+<span class="fc" id="L8">            this.totalHeureRequiseCycle =42; this.dateMinCycle = &quot;2018-04-01&quot;; this.dateMaxCycle = &quot;2020-04-01&quot;; }</span>
+<span class="fc bfc" id="L9" title="All 2 branches covered.">        if(cycle.equals(&quot;2016-2018&quot;)){</span>
+<span class="fc" id="L10">            this.totalHeureRequiseCycle =42; this.dateMinCycle = &quot;2016-04-01&quot;; this.dateMaxCycle = &quot;2018-07-01&quot;; }</span>
+<span class="fc bfc" id="L11" title="All 2 branches covered.">        if(cycle.equals(&quot;2020-2022&quot;)){</span>
+<span class="fc" id="L12">            this.totalHeureRequiseCycle =40; this.dateMinCycle = &quot;2020-04-01&quot;; this.dateMaxCycle = &quot;2022-04-01&quot;; }</span>
+
+<span class="fc" id="L14">        maximumHeurePresentation = 23;</span>
+<span class="fc" id="L15">        maximumHeureProjetDeRecherche = 23;</span>
+<span class="fc" id="L16">        maximumHeureRedactionProfessionnelle = 17;</span>
+<span class="fc" id="L17">        maximumHeureGroupeDeDiscussion = 17;</span>
+<span class="fc" id="L18">    }</span>
+
+    public Architecte(){
+<span class="nc" id="L21">        super();</span>
+<span class="nc" id="L22">    }</span>
+
+    @Override
+    protected boolean verifierCycle(String cycle) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if(cycle.equals(&quot;2018-2020&quot;) | cycle.equals(&quot;2016-2018&quot;) | cycle.equals(&quot;2020-2022&quot;)){return true;}</span>
+<span class="fc" id="L27">        Declaration.resultats.stopperExecution(VERIF_CYCLE);return false;</span>
+    }
+    protected static boolean verifierPremiereLettreArchitecte(String chaine){
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if(chaine.length()==0){return false;}</span>
+<span class="fc" id="L31">        char[] lettresPermises = {'A', 'T'};</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        for (char lettre : lettresPermises){</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">            if(chaine.charAt(0)==lettre) {return true;}</span>
+        }
+<span class="fc" id="L35">        return false;</span>
+    }
+    @Override
+    protected boolean verifierNumeroDePermis(String numeroDePermis, String nom, String prenom) {
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        if(verifierPremiereLettreArchitecte(numeroDePermis) &amp;&amp; Declaration.verifierSiChaineSuivieDeQuatreChiffre(numeroDePermis,0)){return true;}</span>
+<span class="fc" id="L40">        Declaration.resultats.stopperExecution(VERIF_NUMERO_PERMIS);return false;</span>
+    }
+
+    protected boolean verifierHeuresRequisesFormation(){
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if (Activite.compteurHeuresRequisesArchitecteFormation &lt; 17) {</span>
+<span class="fc" id="L45">            Declaration.heuresManquantesFormation = 17 - Activite.compteurHeuresRequisesArchitecteFormation;</span>
+<span class="fc" id="L46">            envoyerErreur( Declaration.heuresManquantesFormation + Declaration.HEURE_CUMUL);</span>
+<span class="fc" id="L47">            return false;</span>
+<span class="nc" id="L48">        }return true;</span>
+    }
+
+    protected boolean verifierHeures(){
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(1) &gt; 17){Activite.compteurHeuresActivite[1] = 17;}</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(2) &gt; 23){Activite.compteurHeuresActivite[2] = 23;}</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(4) &gt; 23){Activite.compteurHeuresActivite[4] = 23;}</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(5) &gt; 17){Activite.compteurHeuresActivite[5] = 17;}</span>
+<span class="pc bpc" id="L56" title="3 of 6 branches missed.">        if(!verifierTotalHeuresCycle() | !verifierHeuresRequisesFormation()){return false;}</span>
+<span class="nc" id="L57">        return true;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

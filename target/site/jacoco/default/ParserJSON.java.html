@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParserJSON.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ParserJSON.java</span></div><h1>ParserJSON.java</h1><pre class="source lang-java linenums">import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L9">public class ParserJSON {</span>
+public static final String CLASS_CAST_EXCEPTION = &quot;Le fichier d'entrée est invalide, veuillez verifier que vos champs ont les bons types :\n&quot;
+        +&quot;- le numéro de permis, le nom, le prénom, le cycle, l'ordre, doivent être une chaine de caractère.\n&quot;
+        +&quot;- les heures doivent être des entiers positifs&quot;;
+
+<span class="fc" id="L14">static public ArrayList&lt;Activite&gt; ListeActivite = new ArrayList&lt;Activite&gt;();</span>
+    public static void traiterActivite(int i, JSONArray arrayActivite, long heures){
+<span class="nc" id="L16">        JSONObject activites = (JSONObject) arrayActivite.get(i);</span>
+<span class="nc" id="L17">        String categorie = activites.get(&quot;categorie&quot;).toString(), date = activites.get(&quot;date&quot;).toString(), description = activites.get(&quot;description&quot;).toString();</span>
+<span class="nc" id="L18">        try{heures = (long) activites.get(&quot;heures&quot;);}catch (ClassCastException e){ heures = 0;}</span>
+<span class="nc bnc" id="L19" title="All 11 branches missed.">        switch (categorie){</span>
+<span class="nc" id="L20">            case &quot;cours&quot;: ListeActivite.add(new Cours(description,categorie,heures,date));break;</span>
+<span class="nc" id="L21">            case &quot;atelier&quot;: ListeActivite.add(new Atelier(description,categorie,heures,date));break;</span>
+<span class="nc" id="L22">            case &quot;séminaire&quot;: ListeActivite.add(new Seminaire(description,categorie,heures,date));break;</span>
+<span class="nc" id="L23">            case &quot;colloque&quot;: ListeActivite.add(new Colloque(description,categorie,heures,date));break;</span>
+<span class="nc" id="L24">            case &quot;conférence&quot;: ListeActivite.add(new Conference(description,categorie,heures,date));break;</span>
+<span class="nc" id="L25">            case &quot;lecture dirigée&quot;: ListeActivite.add(new LectureDirigee(description,categorie,heures,date));break;</span>
+<span class="nc" id="L26">            case &quot;présentation&quot;: ListeActivite.add(new Presentation(description,categorie,heures,date));break;</span>
+<span class="nc" id="L27">            case &quot;groupe de discussion&quot;: ListeActivite.add(new GroupeDeDiscussion(description,categorie,heures,date));break;</span>
+<span class="nc" id="L28">            case &quot;projet de recherche&quot;: ListeActivite.add(new ProjetDeRecherche(description,categorie,heures,date));break;</span>
+<span class="nc" id="L29">            case &quot;rédaction professionnelle&quot;: ListeActivite.add(new RedactionProfessionnel(description,categorie,heures,date));break;</span>
+<span class="nc" id="L30">            default : ListeActivite.add(new ActiviteNonReconnue(description,categorie,heures,date));break;</span>
+<span class="nc" id="L31">        }}</span>
+
+    public static boolean parser(String fichierEntree) throws IOException, ParseException, java.text.ParseException{
+        try{
+<span class="nc" id="L35">            Object parser = new JSONParser().parse(new BufferedReader(new InputStreamReader(new FileInputStream(fichierEntree), &quot;UTF-8&quot;)));</span>
+<span class="nc" id="L36">            JSONObject declarationJSON = (JSONObject) parser;long heures = 0;</span>
+<span class="nc" id="L37">            Declaration declaration = new Declaration(declarationJSON);</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if(!declaration.verifierDeclaration()){declaration.getResultats();return false;}</span>
+<span class="nc" id="L39">            JSONArray arrayActivite = (JSONArray) declarationJSON.get(&quot;activites&quot;);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            for (int i = 0; i &lt; arrayActivite.toArray().length; i++) {traiterActivite(i,arrayActivite,heures);}</span>
+<span class="nc" id="L41">            soustraireHeureSupplementaireJournaliere(ListeActivite);</span>
+<span class="nc" id="L42">            declaration.getResultats();</span>
+<span class="nc" id="L43">            return true;</span>
+<span class="nc" id="L44">        }catch (ClassCastException e){envoyerErreurStatic(CLASS_CAST_EXCEPTION); System.out.println(CLASS_CAST_EXCEPTION); return false;}</span>
+    }
+
+    public static void soustraireHeureSupplementaireJournaliere(ArrayList&lt;Activite&gt; ListeActivite){
+<span class="nc" id="L48">        additionnerHeure(ListerActiviteParDate(ListeActivite));}</span>
+
+    public static void additionnerHeure(ArrayList&lt;ArrayList&lt;Activite&gt;&gt; listeDate){
+<span class="fc" id="L51">        int heures=0;long diffHeures = 0;int indexSurplus = -1;String messageDepassement =&quot;Maximum d'heure dépassé pour la journée&quot;;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for(int i =0; i&lt;listeDate.size(); i++) {heures = 0;indexSurplus = -1;</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            for(int j = 0; j&lt;listeDate.get(i).size();j++) {</span>
+<span class="fc" id="L54">                heures += listeDate.get(i).get(j).getHeures();</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">                if (heures &gt; 10) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">                    if (indexSurplus == -1) {</span>
+<span class="fc" id="L57">                        messageDepassement += &quot; &quot; + listeDate.get(i).get(j).getDate() + &quot;: \n&quot;; indexSurplus = j; diffHeures = heures - 10;</span>
+<span class="fc" id="L58">                        mettreAJourNombreHeureDeLActivite(listeDate.get(i).get(j), diffHeures);</span>
+<span class="fc" id="L59">                        messageDepassement += &quot; - Pour &quot; + listeDate.get(i).get(j).getDescription() + &quot;, &quot; + diffHeures + &quot;heures ont été considérée(s) \n&quot;;}</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">                    if (j &gt; indexSurplus) {</span>
+<span class="fc" id="L61">                        diffHeures = listeDate.get(i).get(j).getHeures();</span>
+<span class="fc" id="L62">                        mettreAJourNombreHeureDeLActivite(listeDate.get(i).get(j), diffHeures);</span>
+<span class="fc" id="L63">                        messageDepassement += &quot; - Pour &quot; + listeDate.get(i).get(j).getDescription() + &quot;, &quot; + &quot;0 heures ont été considérée(s) \n&quot;;}}}</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if(heures&gt;10) {envoyerErreurStatic(messageDepassement);}messageDepassement = &quot;Maximum d'heure dépassé pour la journée&quot; ;}</span>
+<span class="fc" id="L65">    }</span>
+    public static void mettreAJourNombreHeureDeLActivite(Activite ActiviteActuel, long heures){
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;cours&quot;)){Activite.soustraireCompteurHeuresActivite(heures,0);}</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;séminaire&quot;)){Activite.soustraireCompteurHeuresActivite(heures,9);}</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;groupe de discussion&quot;)){Activite.soustraireCompteurHeuresActivite(heures,1);}</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;projet de recherche&quot;)){Activite.soustraireCompteurHeuresActivite(heures,2);}</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;conférence&quot;)){Activite.soustraireCompteurHeuresActivite(heures,3);}</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;présentation&quot;)){Activite.soustraireCompteurHeuresActivite(heures,4);}</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;rédaction professionnelle&quot;)){Activite.soustraireCompteurHeuresActivite(heures,5);}</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;atelier&quot;)){Activite.soustraireCompteurHeuresActivite(heures,6);}</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;colloque&quot;)){Activite.soustraireCompteurHeuresActivite(heures,7);}</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (0 == ActiviteActuel.getCategorie().compareTo(&quot;lecture dirigée&quot;)){Activite.soustraireCompteurHeuresActivite(heures,8);}</span>
+<span class="fc" id="L77">      }</span>
+
+    public static ArrayList&lt;ArrayList&lt;Activite&gt;&gt; ListerActiviteParDate(ArrayList&lt;Activite&gt; ListeCategorie){
+<span class="fc" id="L80">        ArrayList&lt;ArrayList&lt;Activite&gt;&gt; listeDate = new ArrayList&lt;ArrayList&lt;Activite&gt;&gt;();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            for (int j = 0; j &lt; ListeCategorie.size(); j++) {</span>
+<span class="fc" id="L82">                int finalJ = j;</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">                if(!listeDate.contains((ArrayList&lt;Activite&gt;) ListeCategorie.stream().filter(s -&gt; s.getDate().equals(ListeCategorie.get(finalJ).getDate())).collect(Collectors.toList()))) {</span>
+<span class="fc" id="L84">                    listeDate.add((ArrayList&lt;Activite&gt;) ListeCategorie.stream().filter(s -&gt; s.getDate().equals(ListeCategorie.get(finalJ).getDate())).collect(Collectors.toList()));</span>
+                }
+        }
+<span class="fc" id="L87">        return listeDate;</span>
+    }
+
+
+    public static void envoyerErreurStatic(String messageErreur){
+<span class="fc" id="L92">        Declaration.resultats.ajouterUneErreur(messageErreur);</span>
+<span class="fc" id="L93">    }</span>
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

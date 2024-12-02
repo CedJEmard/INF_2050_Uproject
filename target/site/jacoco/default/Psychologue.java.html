@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Psychologue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Psychologue.java</span></div><h1>Psychologue.java</h1><pre class="source lang-java linenums">public class Psychologue extends Individu {
+    protected static final String HEURES_COURS_PSY = &quot;22 heures de cours minimum requises pour Psychologue&quot;;
+
+    protected static final String VERIF_CYCLE =&quot;Cycle invalide. Le cycle supporté pour les psychologues est \&quot;2018-2023\&quot;. Le cycle est incomplet&quot;;
+    protected static final String VERIF_NUMERO_PERMIS=&quot;Le fichier d'entrée est invalide : le numéro de permis des psychologues doit être composé de 5 chiffres, d'un trait d'union et de 2 autres chiffres. Exemple : \&quot;83723-34\&quot;, le cycle est incomplet&quot;;
+
+    public Psychologue(String cycle) {
+<span class="fc" id="L8">        super(cycle);</span>
+<span class="fc" id="L9">        this.totalHeureRequiseCycle = 90;</span>
+<span class="fc" id="L10">        this.dateMinCycle = &quot;2018-01-01&quot;; this.dateMaxCycle = &quot;2023-01-01&quot;;</span>
+
+<span class="fc" id="L12">        this.minimumHeureCours = 25;</span>
+<span class="fc" id="L13">        this.maximumHeureConference= 15;</span>
+<span class="fc" id="L14">    }</span>
+
+    public Psychologue(){
+<span class="nc" id="L17">        super();</span>
+<span class="nc" id="L18">    }</span>
+
+    @Override
+    protected boolean verifierCycle(String cycle) {
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        if(!cycle.equals(&quot;2018-2023&quot;)){Declaration.resultats.stopperExecution(VERIF_CYCLE);return false;}</span>
+<span class="fc" id="L23">        return true;</span>
+    }
+
+    protected boolean verifierNumeroDePermis(String numeroDePermis, String nom, String prenom){
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if(numeroDePermis.length() != 8){Declaration.resultats.stopperExecution(VERIF_NUMERO_PERMIS);return false;}</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if(numeroDePermis.charAt(5) == '-'</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">                &amp;&amp; Character.isDigit(numeroDePermis.charAt(6))</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">                &amp;&amp; Character.isDigit(numeroDePermis.charAt(7))</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">                &amp;&amp; Declaration.verifierSiChaineCommenceParCinqChiffre(numeroDePermis.substring(0,5))){</span>
+<span class="fc" id="L32">            return true;}</span>
+<span class="nc" id="L33">        Declaration.resultats.stopperExecution(VERIF_NUMERO_PERMIS);return false;</span>
+    }
+
+    protected boolean verifierHeures(){
+<span class="fc" id="L37">        int compteur = 0;</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(0) &lt; 25){envoyerErreur(HEURES_COURS_PSY); compteur++;}</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if(Activite.getCompteurHeuresActivite(3) &gt; 15){Activite.compteurHeuresActivite[3] = 15;}</span>
+<span class="pc bpc" id="L40" title="3 of 6 branches missed.">        if(!verifierTotalHeuresCycle() | compteur &gt;0){return false;}</span>
+<span class="nc" id="L41">        return true;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inf2050-projet-a21</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">import java.io.IOException;
+
+import org.json.simple.parser.*;
+
+<span class="nc" id="L5">public class Main {</span>
+    public static final String AIDE_COMMANDE = &quot;Commande non reconnue: \n&quot;
+            + &quot;- Pour soumettre une déclaration : java -jar FormationContinue.jar declaration.json resultat.json avec des fichiers en JSON. \n&quot;
+            + &quot;- Pour afficher des statistiques : java -jar  FormationContinue.jar -S \n&quot;
+            + &quot;- Pour réinitialiser les statistiques : java -jar FormationContinue.jar -SR&quot;;
+
+    public static final String AIDE_STATISTIQUES = &quot;Argument invalide. Un appel avec 1 argument vous permets :\n&quot;
+            + &quot;- D'afficher des statistiques : java -jar FormationContinue.jar -S\n&quot;
+            + &quot;- De les réinitialiser : java -jar FormationContinue.jar -SR&quot;;
+
+    public static final String AIDE_FICHIER_INTROUVABLES = &quot; Le fichier de sortie ou le fichier d'entrée est introuvable.\n&quot;
+            +&quot;Un appel avec deux arguments vous permets de soumettre une déclaration.\n&quot;
+            +&quot;Assurez vous d'avoir correctement entrées vos fichiers et qu'ils sont au format JSON.\n&quot;
+            +&quot;Exemple : java -jar FormationContinue.jar declaration.json resultat.json&quot;;
+
+    public static final String FICHIER_INVALIDE = &quot;Le fichier d'entrée est invalide (des champs sont vides ou ne respectent pas leurs types), le cycle est incomplet.\n&quot;
+            +&quot;La déclaration est invalide.&quot;;
+
+    protected static final String FICHIER_STATISTIQUES = &quot;statistiques.json&quot;;
+
+    public static void verifierNombreArguments(String[] args){
+<span class="fc" id="L26">       int size = args.length;</span>
+<span class="pc bpc" id="L27" title="2 of 4 branches missed.">       if(size == 0 || size &gt; 2){System.out.println(AIDE_COMMANDE);}</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">       if(size == 1){String option = args[0]; gererLesStatistiques(option);}</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">       if(size == 2){String fichierEntree = args[0];String fichierSortie = args[1]; parserEtEcrire(fichierEntree,fichierSortie);}</span>
+<span class="fc" id="L30">    }</span>
+
+    public static void gererLesStatistiques(String option){
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(option.equals(&quot;-S&quot;)){afficherStatistiques();}</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        else if(option.equals(&quot;-SR&quot;)){reinitialiserStatistiques();}</span>
+<span class="nc" id="L35">        else{System.out.println(AIDE_STATISTIQUES);}</span>
+<span class="nc" id="L36">    }</span>
+
+    public static void afficherStatistiques(){
+<span class="nc" id="L39">        Statistiques.lireStatistiques(FICHIER_STATISTIQUES);</span>
+<span class="nc" id="L40">        Statistiques.afficherStatistiques(FICHIER_STATISTIQUES);</span>
+<span class="nc" id="L41">    }</span>
+
+    public static void reinitialiserStatistiques(){
+        try{
+<span class="nc" id="L45">            Statistiques.reinitialiserStatistiques();</span>
+<span class="nc" id="L46">            WriterJSON.ecrireStatistiques(FICHIER_STATISTIQUES);</span>
+<span class="nc" id="L47">            System.out.println(&quot;Reinitialisation des statistiques faite !&quot;);</span>
+<span class="nc" id="L48">        }catch (IOException e){}</span>
+<span class="nc" id="L49">    }</span>
+
+    public static void parserEtEcrire(String fichierEntree, String fichierSortie){
+        try {
+<span class="nc" id="L53">            Statistiques.lireStatistiques(FICHIER_STATISTIQUES);</span>
+<span class="nc" id="L54">            Statistiques.nbDeclarationsTraitees++;</span>
+<span class="nc" id="L55">            ParserJSON.parser(fichierEntree);</span>
+<span class="nc" id="L56">            WriterJSON.ecrireResultat(fichierSortie);</span>
+<span class="nc" id="L57">            WriterJSON.ecrireStatistiques(FICHIER_STATISTIQUES);</span>
+        }
+<span class="nc" id="L59">        catch(IOException e){System.out.println(AIDE_FICHIER_INTROUVABLES);}</span>
+<span class="nc" id="L60">        catch(ParseException | java.text.ParseException e){Statistiques.incrementerDeclarationIncompletesOuInvalides();System.out.println(FICHIER_INVALIDE);}</span>
+<span class="nc" id="L61">    }</span>
+
+<span class="nc" id="L63">    public static void main(String[] args){verifierNombreArguments(args);}</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
