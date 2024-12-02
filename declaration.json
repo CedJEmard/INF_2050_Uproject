@@ -1,0 +1,64 @@
+{
+   "prenom": "Serge",
+   "nom": "Dogny",
+   "sexe": 8,
+   "numero_de_permis": "12356",
+   "cycle": "2018-2021",
+   "ordre": "podiatres",
+   "activites": [
+      {
+         "description": "Cours sur les monuments",
+         "categorie": "cours",
+         "heures": 9,
+         "date": "2020-05-20"
+      },
+      {
+         "description": "Cours sur les monuments",
+         "categorie": "cours",
+         "heures": 2,
+         "date": "2020-05-20"
+      },
+      {
+         "description": "Cours sur la déontologie",
+         "categorie": "cours",
+         "heures": 10,
+         "date": "2020-03-20"
+      },
+      {
+         "description": "Séminaire sur l'architecture contemporaine",
+         "categorie": "séminaire",
+         "heures": 10,
+         "date": "2020-05-20"
+      },
+      {
+         "description": "Rédaction pour le magazine Architecture moderne",
+         "categorie": "rédaction professionnelle",
+         "heures": 6,
+         "date": "2020-10-22"
+      },
+      {
+         "description": "Rédaction pour le magazine des maxi bo goss",
+         "categorie": "rédaction professionnelle",
+         "heures": 5,
+         "date": "2020-10-22"
+      },
+      {
+         "description": "Colloque pour devenir un ultra bo goss 2010",
+         "categorie": "colloque",
+         "heures": 6,
+         "date": "2020-10-22"
+      },
+      {
+         "description": "Participation à un groupe de discussion sur le partage des projets architecturaux de plus de 20 ans ",
+         "categorie": "groupe de discussion",
+         "heures": 8,
+         "date": "2020-04-01"
+      },
+      {
+         "description": "Visite d'établissements architecturaux",
+         "categorie": "voyage",
+         "heures": 2,
+         "date": "2020-02-02"
+      }
+   ]
+}

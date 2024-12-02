@@ -1,0 +1,3 @@
+#Repertoires et fichiers ignores en production
+*.iml
+/.idea/

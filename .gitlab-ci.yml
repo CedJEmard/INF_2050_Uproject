@@ -1,0 +1,7 @@
+image: maven:3.6.3-jdk-11 
+
+test:
+    script: "mvn test"
+
+build:
+    script: "mvn package -B"
